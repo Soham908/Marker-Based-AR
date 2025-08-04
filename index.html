@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebAR Floor Plan Test</title>
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+        }
+        model-viewer {
+            width: 100%;
+            height: 500px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .info {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="info">
+        <h1>WebAR Floor Plan Test</h1>
+        <p>View the 3D model below, then tap "View in your space" to see it in AR!</p>
+    </div>
+    
+    <model-viewer 
+        src="floor_plan_generator_test_output.glb"
+        alt="Floor Plan 3D Model"
+        ar
+        ar-modes="webxr scene-viewer quick-look"
+        camera-controls
+        auto-rotate
+        shadow-intensity="1"
+        environment-image="neutral"
+        exposure="0.5">
+        
+        <div class="progress-bar hide" slot="progress-bar">
+            <div class="update-bar"></div>
+        </div>
+        
+        <button slot="ar-button" id="ar-button">
+            View in your space
+        </button>
+    </model-viewer>
+
+    <div class="info">
+        <h3>Instructions:</h3>
+        <ul>
+            <li><strong>Desktop:</strong> Rotate and zoom the 3D model</li>
+            <li><strong>Mobile:</strong> Tap "View in your space" for AR</li>
+            <li><strong>Android:</strong> Uses WebXR or Scene Viewer</li>
+            <li><strong>iOS:</strong> Uses Quick Look AR</li>
+        </ul>
+    </div>
+</body>
+</html>
