@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>NFT Image Tracking AR</title>
+    <!-- Different script for NFT -->
+    <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+    <style>
+        body { margin: 0; overflow: hidden; font-family: Arial, sans-serif; }
+        .arjs-loader {
+            height: 100vh; width: 100vw; position: absolute; top: 0; left: 0;
+            background-color: rgba(0, 0, 0, 0.8); z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .arjs-loader div { 
+            text-align: center; font-size: 1.25em; color: white; 
+            padding: 20px; max-width: 80%;
+        }
+        .instructions {
+            position: fixed; top: 10px; left: 10px; right: 10px; z-index: 100;
+            background: rgba(0,0,0,0.8); color: white; padding: 15px;
+            border-radius: 8px; text-align: center; font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="instructions">
+        📱 Point camera at your printed image to see the floor plan!
+    </div>
+    
+    <div class="arjs-loader">
+        <div>
+            Loading NFT AR...<br>
+            <small>Point camera at your custom image</small>
+        </div>
+    </div>
+    
+    <a-scene
+        vr-mode-ui="enabled: false"
+        renderer="logarithmicDepthBuffer: true"
+        embedded
+        arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
+        
+        <!-- NFT marker - use filename WITHOUT extension -->
+        <a-nft
+            type="nft"
+            url="./marker_img"
+            smooth="true"
+            smoothCount="10"
+            smoothTolerance=".01"
+            smoothThreshold="5">
+            
+            <!-- Your floor plan -->
+            <a-entity
+                gltf-model="./floor-plan.glb"
+                position="0 0 0"
+                scale="20 20 20"
+                rotation="0 0 0">
+            </a-entity>
+            
+        </a-nft>
+        
+        <a-entity camera></a-entity>
+    </a-scene>
+
+    <script>
+        // Remove loader when NFT loads
+        window.addEventListener('arjs-nft-loaded', function() {
+            document.querySelector('.arjs-loader').style.display = 'none';
+            console.log('NFT marker loaded successfully');
+        });
+        
+        // Timeout fallback
+        setTimeout(() => {
+            const loader = document.querySelector('.arjs-loader');
+            if (loader) loader.style.display = 'none';
+        }, 10000);
+    </script>
+</body>
+</html>
