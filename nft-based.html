@@ -3,63 +3,62 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>NFT Debug - Simple Box</title>
+    <title>NFT Image Tracking AR</title>
+    <!-- Different script for NFT -->
     <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
     <style>
+        body { margin: 0; overflow: hidden; font-family: Arial, sans-serif; }
         .arjs-loader {
-            height: 100%;
-            width: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            background-color: rgba(0, 0, 0, 0.8);
-            z-index: 9999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            height: 100vh; width: 100vw; position: absolute; top: 0; left: 0;
+            background-color: rgba(0, 0, 0, 0.8); z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
         }
-        .arjs-loader div {
-            text-align: center;
-            font-size: 1.25em;
-            color: white;
+        .arjs-loader div { 
+            text-align: center; font-size: 1.25em; color: white; 
+            padding: 20px; max-width: 80%;
+        }
+        .instructions {
+            position: fixed; top: 10px; left: 10px; right: 10px; z-index: 100;
+            background: rgba(0,0,0,0.8); color: white; padding: 15px;
+            border-radius: 8px; text-align: center; font-size: 16px;
         }
     </style>
 </head>
-<body style="margin: 0px; overflow: hidden;">
+<body>
+    <div class="instructions">
+        📱 Point camera at your printed image to see the floor plan!
+    </div>
+    
     <div class="arjs-loader">
-        <div>Loading NFT Marker... Point camera at your image!</div>
+        <div>
+            Loading NFT AR...<br>
+            <small>Point camera at your custom image</small>
+        </div>
     </div>
     
     <a-scene
-        vr-mode-ui="enabled: false;"
-        renderer="logarithmicDepthBuffer: true;"
+        vr-mode-ui="enabled: false"
+        renderer="logarithmicDepthBuffer: true"
         embedded
         arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
         
+        <!-- NFT marker - use filename WITHOUT extension -->
         <a-nft
             type="nft"
-            url="./hiro"
+            url="./brochure"
             smooth="true"
             smoothCount="10"
             smoothTolerance=".01"
             smoothThreshold="5">
             
-            <!-- Simple debug box instead of GLB model -->
-            <a-box 
-                position="0 0.5 0" 
-                material="opacity: 0.8; side: double; color: red" 
-                scale="2 2 2">
-            </a-box>
-            
-            <!-- Text label for confirmation -->
-            <a-text 
-                value="NFT WORKING!" 
-                position="0 3 0" 
-                align="center" 
-                color="white" 
-                scale="5 5 5">
-            </a-text>
+            <!-- Your floor plan -->
+            <a-entity
+                gltf-model="./floor-plan.glb"
+                position="0 0 0"
+                scale="10 10 10"
+                rotation="0 0 0">
+            </a-entity>
             
         </a-nft>
         
@@ -67,25 +66,17 @@
     </a-scene>
 
     <script>
-        // Debug logging
+        // Remove loader when NFT loads
         window.addEventListener('arjs-nft-loaded', function() {
-            console.log('✅ NFT marker loaded successfully');
             document.querySelector('.arjs-loader').style.display = 'none';
+            console.log('NFT marker loaded successfully');
         });
         
-        // Enhanced error catching
-        window.addEventListener('error', function(e) {
-            console.error('❌ Error:', e.error);
-        });
-        
-        // Timeout with debug info
+        // Timeout fallback
         setTimeout(() => {
             const loader = document.querySelector('.arjs-loader');
-            if (loader && loader.style.display !== 'none') {
-                console.log('⚠️ NFT marker did not load within 15 seconds');
-                loader.innerHTML = '<div>NFT Loading Failed<br><small>Check console for errors</small></div>';
-            }
-        }, 15000);
+            if (loader) loader.style.display = 'none';
+        }, 10000);
     </script>
 </body>
 </html>
